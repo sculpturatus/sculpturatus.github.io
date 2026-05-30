@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Sculpturatus</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .project-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 1.2rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .project-card:hover {
+      border-color: var(--border2);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+    }
+    .project-card:hover::before { opacity: 1; }
+
+    .project-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .project-tags {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+    .project-desc {
+      color: var(--text-dim);
+      font-size: 0.93rem;
+      line-height: 1.75;
+      margin-bottom: 1.2rem;
+    }
+    .project-features {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.3rem 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .project-features li {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      padding: 0.2rem 0;
+    }
+    .project-features li::before {
+      content: '·  ';
+      color: var(--accent2);
+    }
+    .project-links {
+      display: flex; gap: 1rem; align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #0044AA; }
+    .btn-outline {
+      border: 1px solid var(--border2);
+      color: var(--text-dim);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    .status-badge {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      letter-spacing: 0.06em;
+    }
+    .status-active {
+      background: #E0F7EE;
+      color: #0A7A45;
+    }
+    .status-beta {
+      background: #FFF4E0;
+      color: #9A6000;
+    }
+    .status-dev {
+      background: var(--accent-bg);
+      color: var(--accent);
+    }
+
+    .section-intro {
+      color: var(--text-dim);
+      font-size: 0.93rem;
+      margin-bottom: 2.5rem;
+      max-width: 540px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">SCULPTURATUS<span>.com</span></a>
+  <div class="nav-links">
+    <a href="index.html">about</a>
+    <a href="projects.html" class="active">projects</a>
+    <a href="videos.html">videos</a>
+  </div>
+</nav>
+
+<main class="page">
+
+  <div class="fade-in" style="margin-bottom:2.5rem;">
+    <div class="prompt">ls -la ./projects</div>
+    <h1>Projects</h1>
+    <p class="section-intro">
+      Tools and platforms built at the intersection of computational chemistry,
+      proteomics, and AI-guided drug discovery.
+    </p>
+  </div>
+
+  <!-- Surveyor Chemscape -->
+  <div class="project-card fade-in">
+    <div class="project-header">
+      <h3 style="font-size:1.15rem;">Surveyor Chemscape</h3>
+      <span class="status-badge status-active">active development</span>
+    </div>
+    <div class="project-tags">
+      <span class="tag">Cheminformatics</span>
+      <span class="tag teal">Chemical Space</span>
+      <span class="tag teal">PCA / UMAP</span>
+      <span class="tag grey">PyQt6 · Python</span>
+    </div>
+    <p class="project-desc">
+      An interactive desktop application for visualizing and navigating chemical space
+      across large molecular datasets. Supports multi-dataset comparison, PCA and UMAP
+      projection in 2D and 3D, custom descriptor plotting, hover-to-structure display,
+      and Böttcher complexity scoring — all in a dark/light-mode terminal aesthetic.
+    </p>
+    <ul class="project-features">
+      <li>PCA &amp; UMAP projection (2D + 3D)</li>
+      <li>Custom axis descriptor plots</li>
+      <li>20+ RDKit physicochemical descriptors</li>
+      <li>Böttcher complexity scoring</li>
+      <li>Hover molecule structure viewer</li>
+      <li>Multi-dataset overlay &amp; comparison</li>
+      <li>Overlap analysis with centroid distance</li>
+      <li>Dark / light mode toggle</li>
+      <li>CSV &amp; Excel drag-and-drop import</li>
+      <li>High-DPI molecule rendering</li>
+    </ul>
+    <div class="project-links">
+      <a href="https://github.com/sculpturatus/SurveyorChemscape" target="_blank" class="btn btn-primary">View on GitHub</a>
+      <span style="font-family:var(--mono);font-size:0.75rem;color:var(--text-hint);">Desktop app · macOS</span>
+    </div>
+  </div>
+
+  <!-- PTM Surveyor Platform -->
+  <div class="project-card fade-in">
+    <div class="project-header">
+      <h3 style="font-size:1.15rem;">PTM Surveyor Platform</h3>
+      <span class="status-badge status-dev">in progress</span>
+    </div>
+    <div class="project-tags">
+      <span class="tag">Proteomics</span>
+      <span class="tag">isoTOP-ABPP</span>
+      <span class="tag teal">Covalent Probes</span>
+      <span class="tag teal">AlphaFold · MD</span>
+      <span class="tag grey">Drug Discovery</span>
+    </div>
+    <p class="project-desc">
+      A six-phase chemoproteomic platform for mapping the ligandable cysteinome across
+      cell states using cysteine-reactive covalent probes organized as diastereomer sets.
+      Integrates isoTOP-ABPP mass spectrometry with a sequential AlphaFold → molecular
+      docking → molecular dynamics computational pipeline for structure-guided probe optimization.
+    </p>
+    <ul class="project-features">
+      <li>~80% cysteinome coverage target</li>
+      <li>Diastereomeric probe sets</li>
+      <li>isoTOP-ABPP quantification</li>
+      <li>AlphaFold structural modeling</li>
+      <li>Cryptic pocket identification</li>
+      <li>Allosteric site discovery</li>
+      <li>AI-guided iterative design</li>
+      <li>PPI interface targeting</li>
+    </ul>
+    <div class="project-links">
+      <span style="font-family:var(--mono);font-size:0.75rem;color:var(--text-hint);">Stealth Medicines · San Francisco</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  sculpturatus.com · kevin a. scott · san francisco
+</footer>
+
+</body>
+</html>

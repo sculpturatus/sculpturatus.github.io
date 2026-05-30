@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Videos — Sculpturatus</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .yt-hero {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 1.5rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 2.5rem;
+      text-decoration: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .yt-hero:hover {
+      border-color: #FF0000;
+      box-shadow: 0 2px 16px rgba(255,0,0,0.06);
+    }
+    .yt-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: #FF0000;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .yt-icon svg { width: 22px; height: 22px; fill: white; }
+    .yt-info h3 { color: var(--text); font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .yt-info p { font-family: var(--mono); font-size: 0.75rem; color: var(--text-hint); margin: 0; }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .video-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .video-card:hover {
+      border-color: var(--border2);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .video-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .video-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .video-thumb .play-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.15);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .video-card:hover .play-overlay { opacity: 1; }
+    .play-btn {
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.92);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .play-btn svg { width: 18px; height: 18px; fill: #FF0000; margin-left: 3px; }
+
+    .video-info { padding: 1rem; }
+    .video-info h3 {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 0.3rem;
+    }
+    .video-meta {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-hint);
+    }
+
+    .channel-cta {
+      margin-top: 2.5rem;
+      padding: 1.5rem;
+      background: var(--accent-bg);
+      border: 1px solid #C0D4FF;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .channel-cta p {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin: 0;
+    }
+    .btn-yt {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 0.5rem 1.2rem;
+      background: #FF0000;
+      color: white;
+      border-radius: var(--radius);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .btn-yt:hover { background: #CC0000; }
+
+    .loading-msg {
+      grid-column: 1/-1;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--text-hint);
+      padding: 3rem 0;
+    }
+    .loading-msg a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .loading-msg a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">SCULPTURATUS<span>.com</span></a>
+  <div class="nav-links">
+    <a href="index.html">about</a>
+    <a href="projects.html">projects</a>
+    <a href="videos.html" class="active">videos</a>
+  </div>
+</nav>
+
+<main class="page">
+
+  <div class="fade-in" style="margin-bottom:2rem;">
+    <div class="prompt">open https://youtube.com/@sculpturatus</div>
+    <h1>Videos</h1>
+  </div>
+
+  <a class="yt-hero fade-in" href="https://youtube.com/@sculpturatus" target="_blank">
+    <div class="yt-icon">
+      <svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+    </div>
+    <div class="yt-info">
+      <h3>@sculpturatus on YouTube</h3>
+      <p>Visit the channel to watch all videos →</p>
+    </div>
+  </a>
+
+  <div class="fade-in">
+    <h2>latest videos</h2>
+    <div class="video-grid" id="video-grid">
+      <div class="loading-msg">
+        Videos load dynamically from YouTube.<br><br>
+        <a href="https://youtube.com/@sculpturatus" target="_blank">Visit @sculpturatus on YouTube →</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="channel-cta fade-in">
+    <p>// subscribe for new content on drug discovery, cheminformatics &amp; more</p>
+    <a href="https://youtube.com/@sculpturatus?sub_confirmation=1" target="_blank" class="btn-yt">Subscribe</a>
+  </div>
+
+</main>
+
+<footer>
+  sculpturatus.com · kevin a. scott · san francisco
+</footer>
+
+<script>
+// YouTube Data API v3 — add your API key below to enable live video loading
+// Get a free key at console.cloud.google.com → YouTube Data API v3
+const YT_API_KEY = '';
+const YT_CHANNEL_HANDLE = 'sculpturatus';
+
+async function loadVideos() {
+  if (!YT_API_KEY) return; // No key yet — show fallback link
+
+  try {
+    // First get channel ID from handle
+    const chRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forHandle=${YT_CHANNEL_HANDLE}&key=${YT_API_KEY}`
+    );
+    const chData = await chRes.json();
+    const uploadsId = chData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+    if (!uploadsId) return;
+
+    // Then get latest videos
+    const vidRes = await fetch(
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=12&playlistId=${uploadsId}&key=${YT_API_KEY}`
+    );
+    const vidData = await vidRes.json();
+    const items = vidData.items || [];
+    if (!items.length) return;
+
+    const grid = document.getElementById('video-grid');
+    grid.innerHTML = items.map(item => {
+      const s = item.snippet;
+      const videoId = s.resourceId.videoId;
+      const thumb = s.thumbnails?.high?.url || s.thumbnails?.medium?.url || '';
+      const title = s.title;
+      const date = new Date(s.publishedAt).toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'});
+      return `
+        <a class="video-card" href="https://youtube.com/watch?v=${videoId}" target="_blank">
+          <div class="video-thumb">
+            <img src="${thumb}" alt="${title}" loading="lazy">
+            <div class="play-overlay">
+              <div class="play-btn">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>${title}</h3>
+            <span class="video-meta">${date}</span>
+          </div>
+        </a>`;
+    }).join('');
+  } catch (e) {
+    // API failed silently — fallback link stays visible
+  }
+}
+
+loadVideos();
+</script>
+
+</body>
+</html>

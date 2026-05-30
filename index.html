@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sculpturatus — Kevin A. Scott</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .hero {
+      padding: 5rem 0 3rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3rem;
+    }
+    .hero-meta {
+      display: flex; gap: 0.6rem; flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .hero p {
+      max-width: 560px;
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .info-row {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-hint);
+      letter-spacing: 0.08em;
+      min-width: 100px;
+      padding-top: 0.1rem;
+    }
+    .info-value {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+    .info-value a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .info-value a:hover { text-decoration: underline; }
+
+    .section { margin-bottom: 3rem; }
+
+    .interest-list {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">SCULPTURATUS<span>.com</span></a>
+  <div class="nav-links">
+    <a href="index.html" class="active">about</a>
+    <a href="projects.html">projects</a>
+    <a href="videos.html">videos</a>
+  </div>
+</nav>
+
+<main class="page">
+
+  <div class="hero fade-in">
+    <div class="prompt">whoami</div>
+    <h1>Kevin A. Scott<span class="cursor"></span></h1>
+    <div class="hero-meta">
+      <span class="tag">Drug Discovery</span>
+      <span class="tag teal">Computational Chemistry</span>
+      <span class="tag teal">Chemical Biology</span>
+      <span class="tag grey">San Francisco, CA</span>
+    </div>
+    <p>
+      Co-founder and Director of Discovery Chemistry at Stealth Medicines,
+      working at the intersection of computational drug discovery, chemical biology,
+      and AI-driven protein dynamics.
+    </p>
+    <p>
+      My work focuses on targeting dynamic proteins — cryptic pockets, allosteric sites,
+      and protein-protein interaction interfaces — using covalent chemoproteomic platforms
+      and AI-guided molecular design.
+    </p>
+  </div>
+
+  <div class="section fade-in">
+    <h2>info</h2>
+    <div class="info-row">
+      <span class="info-label">position</span>
+      <span class="info-value">Co-founder & Director of Discovery Chemistry, Stealth Medicines</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">location</span>
+      <span class="info-value">San Francisco, California</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">focus</span>
+      <span class="info-value">Covalent chemoproteomic platforms · PTM-targeted drug discovery · AI-guided molecular design</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">twitter / x</span>
+      <span class="info-value"><a href="https://x.com/Sculpturatus" target="_blank">@Sculpturatus</a></span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">github</span>
+      <span class="info-value"><a href="https://github.com/sculpturatus" target="_blank">github.com/sculpturatus</a></span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">youtube</span>
+      <span class="info-value"><a href="https://youtube.com/@sculpturatus" target="_blank">@sculpturatus</a></span>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>research interests</h2>
+    <div class="interest-list">
+      <span class="tag">Cysteine Reactivity Profiling</span>
+      <span class="tag">isoTOP-ABPP</span>
+      <span class="tag teal">Cryptic Pocket Discovery</span>
+      <span class="tag teal">Allosteric Modulation</span>
+      <span class="tag">Covalent Probe Design</span>
+      <span class="tag">PTM Biology</span>
+      <span class="tag teal">AlphaFold + MD Pipelines</span>
+      <span class="tag">RIPTAC Platforms</span>
+      <span class="tag grey">Chemical Space Navigation</span>
+      <span class="tag grey">Protein Dynamics</span>
+    </div>
+  </div>
+
+  <div class="section fade-in">
+    <h2>tools &amp; platforms</h2>
+    <div class="info-grid">
+      <div class="card">
+        <h3>PTM Surveyor Platform</h3>
+        <p style="margin-top:0.4rem;">Cysteine-reactive covalent probe platform mapping the epiproteome via isoTOP-ABPP mass spectrometry, integrated with AlphaFold → docking → MD computational pipeline.</p>
+      </div>
+      <div class="card">
+        <h3>Surveyor Chemscape</h3>
+        <p style="margin-top:0.4rem;">Interactive chemical space visualization tool for drug discovery. PCA, UMAP, and custom descriptor plotting across large molecular datasets.</p>
+        <div style="margin-top:0.8rem;">
+          <a href="projects.html" class="link">view project →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  sculpturatus.com · kevin a. scott · san francisco
+</footer>
+
+</body>
+</html>
