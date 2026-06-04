@@ -1,216 +1,875 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QCHP257817"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-QCHP257817');
-</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sculpturatus — kevin a. scott</title>
-  <link rel="stylesheet" href="style.css">
+  <title>surveyor chemscape</title>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
   <style>
-    .hero {
-      padding: 5rem 0 3rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 3rem;
+    /* ── Variables ─────────────────────────────────────────── */
+    :root {
+      --bg:        #F7F8FA;
+      --bg2:       #FFFFFF;
+      --bg3:       #EEF1F7;
+      --border:    #E2E6EF;
+      --border2:   #C8D0DF;
+      --text:      #1A1F2E;
+      --text-dim:  #5A6480;
+      --text-hint: #9AA0B4;
+      --accent:    #0055CC;
+      --accent2:   #00A3A3;
+      --accent-bg: #E8F0FF;
+      --danger:    #CC3333;
+      --panel-w:   280px;
+      --header-h:  48px;
     }
-    .hero-meta {
-      display: flex; gap: 0.6rem; flex-wrap: wrap;
-      margin-bottom: 2rem;
+    .dark {
+      --bg:        #0D0F14;
+      --bg2:       #080A0F;
+      --bg3:       #141820;
+      --border:    #1E2330;
+      --border2:   #2A3045;
+      --text:      #C8D0E0;
+      --text-dim:  #8B94A8;
+      --text-hint: #3A4560;
+      --accent:    #00D4FF;
+      --accent2:   #51CF66;
+      --accent-bg: #003D4D;
+      --danger:    #FF6B6B;
     }
 
-    /* Bio + dogs side by side */
-    .bio-grid {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 2.5rem;
-      align-items: start;
-    }
-    .bio-text p {
-      font-size: 1.05rem;
-      color: var(--text-dim);
-      line-height: 1.8;
-      margin-bottom: 1rem;
-    }
-    .dogs-photo {
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    }
-    .dogs-photo img {
-      width: 100%;
-      display: block;
-      object-fit: cover;
-    }
-    .dogs-caption {
-      font-size: 0.72rem;
-      color: var(--text-hint);
-      text-align: center;
-      padding: 0.5rem;
+    /* ── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; font-family: Arial, sans-serif; font-size: 13px; }
+    body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; transition: background 0.2s, color 0.2s; }
+
+    /* ── Header ────────────────────────────────────────────── */
+    #header {
+      height: var(--header-h);
       background: var(--bg2);
-      border-top: 1px solid var(--border);
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-    .info-row {
-      display: flex; gap: 1rem; align-items: flex-start;
-      padding: 0.9rem 0;
       border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 1rem; gap: 1rem; flex-shrink: 0;
+      z-index: 10;
     }
-    .info-row:last-child { border-bottom: none; }
-    .info-label {
-      font-family: Arial, sans-serif;
-      font-size: 0.72rem;
-      color: var(--text-hint);
-      letter-spacing: 0.08em;
-      min-width: 100px;
-      padding-top: 0.1rem;
+    #header .logo {
+      font-weight: 700; font-size: 0.85rem;
+      color: var(--accent); letter-spacing: 0.08em;
+      text-decoration: none;
     }
-    .info-value {
-      font-family: Arial, sans-serif;
-      font-size: 0.82rem;
-      color: var(--text);
+    #header .logo span { color: var(--text-hint); font-weight: 400; }
+    #header .version { font-size: 0.72rem; color: var(--text-hint); }
+    #header .spacer { flex: 1; }
+    #header .status-msg { font-size: 0.75rem; color: var(--text-hint); }
+    .btn {
+      font-family: Arial, sans-serif; font-size: 0.75rem;
+      padding: 0.35rem 0.8rem; border-radius: 4px; cursor: pointer;
+      border: 1px solid var(--border2); background: var(--bg3);
+      color: var(--text-dim); transition: all 0.15s; white-space: nowrap;
     }
-    .info-value a { color: var(--accent); text-decoration: none; }
-    .info-value a:hover { text-decoration: underline; }
-    .section { margin-bottom: 3rem; }
-    .interest-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .btn.primary { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+    .btn.primary:hover { filter: brightness(0.92); }
+    .btn.danger:hover { border-color: var(--danger); color: var(--danger); }
 
-    @media (max-width: 700px) {
-      .bio-grid { grid-template-columns: 1fr; }
+    /* ── Layout ────────────────────────────────────────────── */
+    #app { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Left Panel ────────────────────────────────────────── */
+    #left-panel {
+      width: var(--panel-w); flex-shrink: 0;
+      background: var(--bg2); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
     }
+    .panel-scroll { flex: 1; overflow-y: auto; padding: 0.75rem; }
+    .panel-scroll::-webkit-scrollbar { width: 6px; }
+    .panel-scroll::-webkit-scrollbar-track { background: transparent; }
+    .panel-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    .section-label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--text-hint); text-transform: uppercase;
+      margin: 0.75rem 0 0.4rem; display: flex; align-items: center; gap: 0.4rem;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .subsection-label {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+      color: var(--text-hint); text-transform: uppercase;
+      margin: 0.6rem 0 0.25rem 0.2rem;
+    }
+
+    /* Drop zone */
+    #drop-zone {
+      border: 1.5px dashed var(--border2); border-radius: 6px;
+      padding: 1.2rem 0.5rem; text-align: center; cursor: pointer;
+      transition: all 0.15s; color: var(--text-hint); font-size: 0.78rem;
+    }
+    #drop-zone:hover, #drop-zone.drag-over {
+      border-color: var(--accent); color: var(--accent); background: var(--accent-bg);
+    }
+    #drop-zone .icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+    #file-input { display: none; }
+
+    /* Dataset rows */
+    .dataset-row {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.35rem 0.3rem; border-radius: 4px;
+      transition: background 0.1s;
+    }
+    .dataset-row:hover { background: var(--bg3); }
+    .dataset-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .color-select {
+      appearance: none; -webkit-appearance: none;
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid var(--border2); cursor: pointer;
+      padding: 0; font-size: 0; color: transparent;
+      flex-shrink: 0; position: relative;
+    }
+    .color-select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    /* Wrapper to show circle + hidden native select on top */
+    .color-picker-wrap {
+      position: relative; width: 14px; height: 14px; flex-shrink: 0;
+    }
+    .color-picker-dot {
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid var(--border2); cursor: pointer;
+      pointer-events: none;
+    }
+    .color-picker-wrap select {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      width: 100%; height: 100%; padding: 0; border: none;
+    }
+    .dataset-name { flex: 1; font-size: 0.78rem; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .dataset-count { font-size: 0.7rem; color: var(--text-hint); flex-shrink: 0; }
+    .dataset-remove { background: none; border: none; color: var(--text-hint); cursor: pointer; font-size: 0.8rem; padding: 0 0.2rem; }
+    .dataset-remove:hover { color: var(--danger); }
+    .dataset-check { width: 13px; height: 13px; accent-color: var(--accent); flex-shrink: 0; }
+
+    /* Override Plotly crosshair cursor */
+    #plot .nsewdrag, #plot .drag { cursor: default !important; }
+    #plot .cursor-crosshair { cursor: default !important; }
+    .js-plotly-plot .plotly .cursor-crosshair { cursor: default !important; }
+    .js-plotly-plot .plotly svg { cursor: default !important; }
+
+    /* Projection controls */
+    .radio-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .radio-btn {
+      font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 3px;
+      border: 1px solid var(--border2); background: var(--bg3);
+      color: var(--text-dim); cursor: pointer; transition: all 0.15s;
+    }
+    .radio-btn.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+
+    /* Custom axis selectors */
+    #custom-axes { display: none; margin-top: 0.5rem; }
+    #custom-axes.visible { display: block; }
+    .axis-row { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.35rem; }
+    .axis-label { font-size: 0.72rem; color: var(--text-hint); width: 14px; flex-shrink: 0; }
+    select {
+      flex: 1; font-family: Arial, sans-serif; font-size: 0.73rem;
+      padding: 0.25rem 0.4rem; border-radius: 3px;
+      border: 1px solid var(--border2); background: var(--bg3); color: var(--text-dim);
+    }
+    select:focus { outline: none; border-color: var(--accent); }
+
+    /* Descriptor checkboxes */
+    .desc-grid { display: flex; flex-direction: column; gap: 0.15rem; }
+    .desc-check-row { display: flex; align-items: center; gap: 0.4rem; padding: 0.15rem 0.2rem; border-radius: 3px; }
+    .desc-check-row:hover { background: var(--bg3); }
+    .desc-check-row input { width: 12px; height: 12px; accent-color: var(--accent); flex-shrink: 0; }
+    .desc-check-row label { font-size: 0.73rem; color: var(--text-dim); cursor: pointer; }
+    .desc-select-btns { display: flex; gap: 0.4rem; margin-bottom: 0.4rem; }
+
+    /* Point size */
+    .slider-row { display: flex; align-items: center; gap: 0.5rem; }
+    input[type=range] { flex: 1; accent-color: var(--accent); }
+    .slider-val { font-size: 0.72rem; color: var(--text-hint); min-width: 28px; text-align: right; }
+
+    /* Compute button */
+    #compute-btn {
+      width: 100%; margin: 0.75rem 0 0;
+      padding: 0.6rem; font-size: 0.8rem; font-weight: 700;
+      background: var(--accent-bg); border: 1px solid var(--accent);
+      color: var(--accent); border-radius: 5px; cursor: pointer;
+      letter-spacing: 0.05em; transition: all 0.15s;
+    }
+    #compute-btn:hover { filter: brightness(0.92); }
+    #compute-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Plot area ──────────────────────────────────────────── */
+    #plot-area {
+      flex: 1; display: flex; flex-direction: column;
+      background: var(--bg); position: relative; overflow: hidden;
+    }
+    #plot { width: 100%; flex: 1; }
+
+    /* Mol hover card */
+    #mol-card {
+      position: absolute; pointer-events: none;
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 8px; padding: 0; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      display: none; z-index: 20; min-width: 200px;
+    }
+    #mol-card-dataset {
+      font-size: 0.72rem; font-weight: 700; color: var(--accent);
+      padding: 0.4rem 0.7rem 0.2rem; letter-spacing: 0.04em;
+    }
+    #mol-card img { display: block; width: 220px; height: 180px; object-fit: contain; }
+    #mol-card-name {
+      font-size: 0.75rem; color: var(--text-dim);
+      padding: 0.2rem 0.7rem 0.4rem; text-align: center;
+    }
+
+    /* Progress overlay */
+    #progress-overlay {
+      position: absolute; inset: 0; background: rgba(247,248,250,0.85);
+      display: none; align-items: center; justify-content: center;
+      flex-direction: column; gap: 0.75rem; z-index: 30;
+    }
+    .dark #progress-overlay { background: rgba(13,15,20,0.85); }
+    #progress-overlay.visible { display: flex; }
+    #progress-msg { font-size: 0.85rem; color: var(--text-dim); }
+    #progress-bar-wrap { width: 240px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    #progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; border-radius: 2px; }
+
+    /* Empty state */
+    #empty-state {
+      position: absolute; inset: 0; display: flex;
+      align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem;
+      pointer-events: none;
+    }
+    #empty-state.hidden { display: none; }
+    #empty-state .prompt { font-size: 0.78rem; color: var(--text-hint); }
+    #empty-state .prompt::before { content: '$ '; color: var(--accent2); }
+
+    /* ── Right panel (overlap) ──────────────────────────────── */
+    #right-panel {
+      width: 220px; flex-shrink: 0;
+      background: var(--bg2); border-left: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    #overlap-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+    #overlap-table th { color: var(--text-hint); font-weight: 700; padding: 0.3rem 0.4rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.68rem; letter-spacing: 0.06em; }
+    #overlap-table td { padding: 0.3rem 0.4rem; color: var(--text-dim); border-bottom: 1px solid var(--border); }
+    #overlap-table tr:last-child td { border-bottom: none; }
+    .overlap-dist { color: var(--text); font-weight: 600; }
+
+    /* ── Notifications ──────────────────────────────────────── */
+    #notif {
+      position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%);
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: 6px; padding: 0.6rem 1.2rem;
+      font-size: 0.8rem; color: var(--text-dim);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 99;
+      white-space: nowrap;
+    }
+    #notif.show { opacity: 1; }
+    #notif.error { border-color: var(--danger); color: var(--danger); }
   </style>
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="index.html" style="display:flex;align-items:center;gap:0.6rem;">
-    <img src="sculpturatus_transparent.png" alt="sculpturatus logo" style="height:28px;width:auto;">
-    <span style="color:var(--text-hint);font-weight:400;">sculpturatus.com</span>
-  </a>
-  <div class="nav-links">
-    <a href="index.html" class="active">about</a>
-    <a href="projects.html">projects</a>
-    <a href="videos.html">videos</a>
-  </div>
-</nav>
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<div id="header">
+  <a class="logo" href="https://sculpturatus.com">sculpturatus<span>.com</span></a>
+  <span class="version">surveyor chemscape v1.0</span>
+  <div class="spacer"></div>
+  <span class="status-msg" id="status-msg">drop a csv or excel file to begin</span>
+  <button class="btn" id="theme-btn" onclick="toggleTheme()">☾ dark</button>
+  <a class="btn" href="https://sculpturatus.com/projects.html">← back to projects</a>
+</div>
 
-<main class="page">
+<!-- ── App ─────────────────────────────────────────────────────────────────── -->
+<div id="app">
 
-  <div class="hero fade-in">
-    <div class="prompt">whoami</div>
-    <h1>kevin a. scott<span class="cursor"></span></h1>
-    <div class="hero-meta">
-      <span class="tag">drug discovery</span>
-      <span class="tag teal">computational chemistry</span>
-      <span class="tag teal">chemical biology</span>
-      <span class="tag grey">san francisco, <abbr class="preserve-case">CA</abbr></span>
-    </div>
+  <!-- Left Panel -->
+  <div id="left-panel">
+    <div class="panel-scroll">
 
-    <div class="bio-grid">
-      <div class="bio-text">
-        <p>
-          co-founder and director of discovery chemistry at stealth medicines,
-          working at the intersection of computational drug discovery, chemical biology,
-          and <abbr class="preserve-case">AI</abbr>-driven protein dynamics.
-        </p>
-        <p>
-          my work focuses on targeting dynamic proteins — cryptic pockets, allosteric sites,
-          and protein-protein interaction interfaces — using covalent chemoproteomic platforms
-          and <abbr class="preserve-case">AI</abbr>-guided molecular design.
-        </p>
-        <p>
-          when not in the lab, i'm out in san francisco with my dogs kaos and entropie.
-        </p>
+      <!-- datasets -->
+      <div class="section-label">datasets</div>
+      <div id="drop-zone" onclick="document.getElementById('file-input').click()"
+           ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+        <div class="icon">⊕</div>
+        <div>drop csv / excel</div>
       </div>
-      <div class="dogs-photo">
-        <img src="kaos_entropie.jpg" alt="kaos and entropie at koret quad">
-        <div class="dogs-caption">kaos &amp; entropie · koret quad, ucsf</div>
+      <input type="file" id="file-input" accept=".csv,.xlsx,.xls,.tsv" onchange="onFileSelect(event)">
+
+      <div class="subsection-label">default libraries</div>
+      <div id="default-dataset-list"></div>
+
+      <div class="subsection-label" id="user-datasets-label" style="display:none;">your libraries</div>
+      <div id="user-dataset-list"></div>
+
+      <!-- projection method -->
+      <div class="section-label">projection</div>
+      <div class="radio-group" id="method-group">
+        <div class="radio-btn active" onclick="setMethod('PCA')">PCA</div>
+        <div class="radio-btn" onclick="setMethod('UMAP')">UMAP</div>
+        <div class="radio-btn" onclick="setMethod('Custom')">custom</div>
       </div>
-    </div>
-  </div>
 
-  <div class="section fade-in">
-    <h2>info</h2>
-    <div class="info-row">
-      <span class="info-label">position</span>
-      <span class="info-value">co-founder &amp; director of discovery chemistry, stealth medicines</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">location</span>
-      <span class="info-value">san francisco, california</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">focus</span>
-      <span class="info-value">covalent chemoproteomic platforms · <abbr class="preserve-case">PTM</abbr>-targeted drug discovery · <abbr class="preserve-case">AI</abbr>-guided molecular design</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">twitter / x</span>
-      <span class="info-value"><a href="https://x.com/Sculpturatus" target="_blank">@sculpturatus</a></span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">bluesky</span>
-      <span class="info-value"><a href="https://bsky.app/profile/sculpturatus.bsky.social" target="_blank">@sculpturatus.bsky.social</a></span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">github</span>
-      <span class="info-value"><a href="https://github.com/sculpturatus" target="_blank">github.com/sculpturatus</a></span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">youtube</span>
-      <span class="info-value"><a href="https://youtube.com/@sculpturatus" target="_blank">@sculpturatus</a></span>
-    </div>
-  </div>
-
-  <div class="section fade-in">
-    <h2>research interests</h2>
-    <div class="interest-list">
-      <span class="tag">cysteine reactivity profiling</span>
-      <span class="tag"><abbr class="preserve-case">isoTOP-ABPP</abbr></span>
-      <span class="tag teal">cryptic pocket discovery</span>
-      <span class="tag teal">allosteric modulation</span>
-      <span class="tag">covalent probe design</span>
-      <span class="tag">biology</span>
-      <span class="tag teal"><abbr class="preserve-case">AlphaFold</abbr> + <abbr class="preserve-case">MD</abbr> pipelines</span>
-      <span class="tag"><abbr class="preserve-case">DDD</abbr> platforms</span>
-      <span class="tag grey">chemical space navigation</span>
-      <span class="tag grey">protein dynamics</span>
-    </div>
-  </div>
-
-  <div class="section fade-in">
-    <h2>tools &amp; platforms</h2>
-    <div class="info-grid">
-      <div class="card">
-        <h3>chemical space surveyor</h3>
-        <p style="margin-top:0.4rem;">cysteine-reactive covalent probe platform mapping the epiproteome via <abbr class="preserve-case">isoTOP-ABPP</abbr> mass spectrometry, integrated with <abbr class="preserve-case">AlphaFold</abbr> → docking → <abbr class="preserve-case">MD</abbr> computational pipeline.</p>
+      <!-- dimensions -->
+      <div class="radio-group" id="dim-group">
+        <div class="radio-btn active" onclick="setDim(2)">2D</div>
+        <div class="radio-btn" onclick="setDim(3)">3D</div>
       </div>
-      <div class="card">
-        <h3>surveyor chemscape</h3>
-        <p style="margin-top:0.4rem;">interactive chemical space visualization tool for drug discovery. <abbr class="preserve-case">PCA</abbr>, <abbr class="preserve-case">UMAP</abbr>, and custom descriptor plotting across large molecular datasets.</p>
-        <div style="margin-top:0.8rem;display:flex;gap:0.6rem;">
-          <a href="projects.html" class="link">view project →</a>
-          <a href="/chemscape" class="link">launch app →</a>
+
+      <!-- custom axes -->
+      <div id="custom-axes">
+        <div class="axis-row">
+          <span class="axis-label">x</span>
+          <select id="axis-x"></select>
+        </div>
+        <div class="axis-row">
+          <span class="axis-label">y</span>
+          <select id="axis-y"></select>
+        </div>
+        <div class="axis-row" id="axis-z-row" style="display:none;">
+          <span class="axis-label">z</span>
+          <select id="axis-z"></select>
         </div>
       </div>
+
+      <!-- descriptors -->
+      <div class="section-label">descriptors</div>
+      <div class="desc-select-btns">
+        <button class="btn" style="flex:1;" onclick="selectAllDesc()">all</button>
+        <button class="btn" style="flex:1;" onclick="selectNoneDesc()">none</button>
+      </div>
+      <div class="desc-grid" id="desc-grid"></div>
+
+      <!-- point size -->
+      <div class="section-label">point size</div>
+      <div class="slider-row">
+        <input type="range" id="size-slider" min="2" max="16" value="6"
+               oninput="document.getElementById('size-val').textContent=this.value+'px'; updatePointSize()">
+        <span class="slider-val" id="size-val">6px</span>
+      </div>
+
+      <!-- compute -->
+      <button id="compute-btn" onclick="compute()" disabled>▶ compute projection</button>
+
     </div>
   </div>
 
-</main>
+  <!-- Plot -->
+  <div id="plot-area">
+    <div id="empty-state">
+      <div class="prompt">drop datasets and click compute projection</div>
+    </div>
+    <div id="plot"></div>
 
-<footer>sculpturatus.com · kevin a. scott · san francisco</footer>
+    <!-- Molecule hover card -->
+    <div id="mol-card">
+      <div id="mol-card-dataset"></div>
+      <img id="mol-card-img" src="" alt="">
+      <div id="mol-card-name"></div>
+    </div>
 
+    <!-- Progress overlay -->
+    <div id="progress-overlay">
+      <div id="progress-msg">computing...</div>
+      <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div id="right-panel">
+    <div class="panel-scroll">
+      <div class="section-label">overlap analysis</div>
+      <button class="btn" style="width:100%;margin-bottom:0.5rem;" onclick="computeOverlap()">compute overlap</button>
+      <table id="overlap-table">
+        <thead><tr><th>sets</th><th>distance</th></tr></thead>
+        <tbody id="overlap-body"></tbody>
+      </table>
+
+      <div class="section-label" style="margin-top:1rem;">spread</div>
+      <table id="spread-table">
+        <thead><tr><th>set</th><th>spread</th></tr></thead>
+        <tbody id="spread-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Notification -->
+<div id="notif"></div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const API = 'https://api.sculpturatus.com';; // ← change to your VPS URL when deployed
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let sessionId = null;
+let datasets = {};        // name → {count, color, visible, isDefault}
+let defaultDatasetNames = new Set();
+let method = 'PCA';
+let nDims = 2;
+let darkMode = false;
+let lastProjection = null;
+
+const COLORS = [
+  '#0055CC','#FF6B6B','#51CF66','#FFD43B',
+  '#CC5DE8','#FF922B','#74C0FC','#F06595',
+  '#A9E34B','#63E6BE'
+];
+let colorIdx = 0;
+
+// Descriptor metadata (populated from API)
+let descriptorLabels = {};
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    const res = await fetch(`${API}/session/new`);
+    const data = await res.json();
+    if (!res.ok) throw new Error('backend error');
+
+    sessionId = data.session_id;
+    descriptorLabels = data.descriptor_labels;
+    buildDescriptorGrid();
+    buildAxisSelectors();
+
+    // Register default datasets
+    Object.entries(data.sets).forEach(([name, info]) => {
+      const color = COLORS[colorIdx % COLORS.length]; colorIdx++;
+      datasets[name] = { count: info.n_molecules, color, visible: true, isDefault: true };
+      defaultDatasetNames.add(name);
+    });
+
+    renderDatasetList();
+
+    if (Object.keys(data.sets).length > 0) {
+      document.getElementById('compute-btn').disabled = false;
+      document.getElementById('empty-state').classList.add('hidden');
+      setStatus(`${Object.keys(data.sets).length} default libraries loaded`);
+    }
+  } catch(e) {
+    notify('cannot reach backend server', true);
+  }
+}
+
+// ── Theme ─────────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('dark', darkMode);
+  document.getElementById('theme-btn').textContent = darkMode ? '☀ light' : '☾ dark';
+  if (lastProjection) renderPlot(lastProjection);
+}
+
+// ── Drag & Drop ───────────────────────────────────────────────────────────────
+function onDragOver(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag-over'); }
+function onDragLeave(e) { document.getElementById('drop-zone').classList.remove('drag-over'); }
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag-over');
+  const files = e.dataTransfer.files;
+  if (files.length) uploadFile(files[0]);
+}
+function onFileSelect(e) { if (e.target.files.length) uploadFile(e.target.files[0]); }
+
+// ── Upload ────────────────────────────────────────────────────────────────────
+async function uploadFile(file) {
+  setStatus(`uploading ${file.name}...`);
+  showProgress('uploading and computing descriptors...', 30);
+
+  const form = new FormData();
+  form.append('file', file);
+  if (sessionId) form.append('session_id', sessionId);
+
+  try {
+    const res = await fetch(`${API}/upload`, { method: 'POST', body: form });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'upload failed');
+
+    sessionId = data.session_id;
+    const color = COLORS[colorIdx % COLORS.length]; colorIdx++;
+    datasets[data.set_name] = { count: data.n_molecules, color, visible: true, isDefault: false };
+    renderDatasetList();
+    document.getElementById('compute-btn').disabled = false;
+    document.getElementById('empty-state').classList.add('hidden');
+    setStatus(`${data.set_name} · ${data.n_molecules} molecules`);
+    notify(`loaded ${data.set_name} (${data.n_molecules} molecules)`);
+  } catch(e) {
+    notify(e.message, true);
+    setStatus('upload failed');
+  }
+  hideProgress();
+}
+
+const COLOR_OPTIONS = [
+  { hex: '#0055CC', name: 'blue' },
+  { hex: '#FF6B6B', name: 'coral' },
+  { hex: '#51CF66', name: 'green' },
+  { hex: '#FFD43B', name: 'yellow' },
+  { hex: '#CC5DE8', name: 'purple' },
+  { hex: '#FF922B', name: 'orange' },
+  { hex: '#74C0FC', name: 'sky blue' },
+  { hex: '#F06595', name: 'pink' },
+  { hex: '#A9E34B', name: 'lime' },
+  { hex: '#63E6BE', name: 'teal' },
+  { hex: '#FF4444', name: 'red' },
+  { hex: '#FFFFFF', name: 'white' },
+];
+
+// ── Dataset list ──────────────────────────────────────────────────────────────
+function _colorSelectHTML(name, currentColor) {
+  const opts = COLOR_OPTIONS.map(c =>
+    `<option value="${c.hex}" ${c.hex === currentColor ? 'selected' : ''}>${c.name}</option>`
+  ).join('');
+  return `
+    <div class="color-picker-wrap" title="pick color">
+      <div class="color-picker-dot" id="dot-${CSS.escape(name)}" style="background:${currentColor}"></div>
+      <select onchange="setColor('${name}', this.value)">${opts}</select>
+    </div>`;
+}
+
+function _datasetRowHTML(name, d) {
+  return `
+    <div class="dataset-row">
+      <input type="checkbox" class="dataset-check" ${d.visible?'checked':''} onchange="toggleDataset('${name}', this.checked)">
+      ${_colorSelectHTML(name, d.color)}
+      <span class="dataset-name" title="${name}">${name}</span>
+      <span class="dataset-count">${d.count}</span>
+      ${d.isDefault ? '' : `<button class="dataset-remove" onclick="removeDataset('${name}')">✕</button>`}
+    </div>`;
+}
+
+function renderDatasetList() {
+  const defaultEntries = Object.entries(datasets).filter(([,d]) => d.isDefault);
+  const userEntries    = Object.entries(datasets).filter(([,d]) => !d.isDefault);
+
+  document.getElementById('default-dataset-list').innerHTML =
+    defaultEntries.map(([n,d]) => _datasetRowHTML(n,d)).join('');
+
+  const userLabel = document.getElementById('user-datasets-label');
+  userLabel.style.display = userEntries.length ? '' : 'none';
+  document.getElementById('user-dataset-list').innerHTML =
+    userEntries.map(([n,d]) => _datasetRowHTML(n,d)).join('');
+}
+
+function toggleDataset(name, checked) { datasets[name].visible = checked; }
+
+function setColor(name, hex) {
+  datasets[name].color = hex;
+  // Update dot without full re-render
+  const dot = document.getElementById(`dot-${CSS.escape(name)}`);
+  if (dot) dot.style.background = hex;
+  if (lastProjection) renderPlot(lastProjection);
+}
+
+async function removeDataset(name) {
+  if (!sessionId) return;
+  await fetch(`${API}/session/${sessionId}/set/${encodeURIComponent(name)}`, { method: 'DELETE' });
+  delete datasets[name];
+  renderDatasetList();
+  if (Object.keys(datasets).length === 0) {
+    document.getElementById('compute-btn').disabled = true;
+    document.getElementById('empty-state').classList.remove('hidden');
+    Plotly.purge('plot');
+    lastProjection = null;
+  }
+}
+
+// ── Projection controls ───────────────────────────────────────────────────────
+function setMethod(m) {
+  method = m;
+  document.querySelectorAll('#method-group .radio-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase().includes(m.toLowerCase()));
+  });
+  document.getElementById('custom-axes').classList.toggle('visible', m === 'Custom');
+}
+
+function setDim(d) {
+  nDims = d;
+  document.querySelectorAll('#dim-group .radio-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === d+'D');
+  });
+  document.getElementById('axis-z-row').style.display = (d === 3) ? 'flex' : 'none';
+}
+
+// ── Descriptor grid ───────────────────────────────────────────────────────────
+// Descriptors unchecked by default (size-correlated or redundant for
+// surface-character analysis).
+const DESC_DEFAULT_OFF = new Set([
+  'MW', 'ExactMW', 'HBD', 'HBA', 'RotBonds', 'Rings', 'HeavyAtoms',
+  'RingFusionDeg', 'BertzCT', 'QED', 'MolRefract', 'NumHeteroatoms',
+  'NumAmideBonds', 'NumBridgeheads', 'NumSpiro', 'MaxRingSize'
+]);
+
+function buildDescriptorGrid() {
+  const grid = document.getElementById('desc-grid');
+  grid.innerHTML = Object.entries(descriptorLabels).map(([key, label]) => {
+    const checked = DESC_DEFAULT_OFF.has(key) ? '' : 'checked';
+    return `
+    <div class=\"desc-check-row\">
+      <input type=\"checkbox\" id=\"desc-${key}\" value=\"${key}\" ${checked}>
+      <label for=\"desc-${key}\">${key} · <span style=\"color:var(--text-hint)\">${label}</span></label>
+    </div>`;
+  }).join('');
+}
+
+function getSelectedDescs() {
+  return [...document.querySelectorAll('#desc-grid input:checked')].map(i => i.value);
+}
+function selectAllDesc() { document.querySelectorAll('#desc-grid input').forEach(i => i.checked = true); }
+function selectNoneDesc() { document.querySelectorAll('#desc-grid input').forEach(i => i.checked = false); }
+
+// ── Axis selectors ────────────────────────────────────────────────────────────
+function buildAxisSelectors() {
+  const opts = Object.entries(descriptorLabels).map(([k,l]) =>
+    `<option value="${k}">${k} · ${l}</option>`).join('');
+  ['axis-x','axis-y','axis-z'].forEach(id => {
+    document.getElementById(id).innerHTML = opts;
+  });
+  document.getElementById('axis-y').selectedIndex = 2;
+  document.getElementById('axis-z').selectedIndex = 3;
+}
+
+// ── Compute ───────────────────────────────────────────────────────────────────
+async function compute() {
+  const visibleSets = Object.entries(datasets).filter(([,d])=>d.visible).map(([n])=>n);
+  if (!visibleSets.length) { notify('no datasets selected', true); return; }
+
+  showProgress(method === 'UMAP' ? 'running umap (this may take a moment)...' : `running ${method.toLowerCase()}...`, method === 'UMAP' ? 10 : 40);
+
+  const body = {
+    session_id: sessionId,
+    set_names: visibleSets,
+    descriptor_cols: getSelectedDescs(),
+    method,
+    n_dimensions: nDims,
+    x_col: document.getElementById('axis-x').value,
+    y_col: document.getElementById('axis-y').value,
+    z_col: document.getElementById('axis-z').value,
+  };
+
+  try {
+    const res = await fetch(`${API}/project`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'projection failed');
+
+    lastProjection = data;
+    renderPlot(data);
+    setStatus(`${method} · ${nDims}D · ${data.coords.length} molecules`);
+  } catch(e) {
+    notify(e.message, true);
+    setStatus('projection failed');
+  }
+  hideProgress();
+}
+
+// ── Plot rendering ────────────────────────────────────────────────────────────
+function renderPlot(data) {
+  const { coords, labels, names, smiles, method: m, explained_variance: ev, axis_labels } = data;
+  const bg = darkMode ? '#0D0F14' : '#F7F8FA';
+  const gridColor = darkMode ? '#1E2330' : '#E2E6EF';
+  const textColor = darkMode ? '#8B94A8' : '#5A6480';
+
+  // Group by label
+  const groups = {};
+  labels.forEach((lbl, i) => {
+    if (!groups[lbl]) groups[lbl] = { x:[], y:[], z:[], names:[], smiles:[], color: datasets[lbl]?.color || '#888' };
+    groups[lbl].x.push(coords[i][0]);
+    groups[lbl].y.push(coords[i][1]);
+    if (nDims === 3) groups[lbl].z.push(coords[i][2]);
+    groups[lbl].names.push(names[i]);
+    groups[lbl].smiles.push(smiles[i]);
+  });
+
+  const pointSize = parseInt(document.getElementById('size-slider').value);
+
+  const traces = Object.entries(groups).map(([lbl, g]) => {
+    const base = {
+      name: lbl,
+      mode: 'markers',
+      marker: { size: pointSize, color: g.color, opacity: 0.8, line: { width: 0.5, color: 'rgba(0,0,0,0.2)' } },
+      text: g.names,
+      customdata: g.smiles.map((s,i) => [lbl, g.names[i], s]),
+      hoverinfo: 'none',
+    };
+    if (nDims === 3) return { ...base, type: 'scatter3d', x: g.x, y: g.y, z: g.z };
+    return { ...base, type: 'scatter', x: g.x, y: g.y };
+  });
+
+  // Axis labels
+  let xLabel, yLabel, zLabel;
+  if (axis_labels) {
+    [xLabel, yLabel, zLabel] = axis_labels;
+  } else if (m === 'PCA' && ev) {
+    xLabel = `PC1 (${ev[0].toFixed(1)}%)`;
+    yLabel = `PC2 (${ev[1].toFixed(1)}%)`;
+    zLabel = ev[2] ? `PC3 (${ev[2].toFixed(1)}%)` : 'PC3';
+  } else {
+    xLabel = 'D1'; yLabel = 'D2'; zLabel = 'D3';
+  }
+
+  const axisStyle = { color: textColor, gridcolor: gridColor, zerolinecolor: gridColor, tickfont: { color: textColor, size: 10 }, titlefont: { color: textColor, size: 11 } };
+
+  const layout = {
+    paper_bgcolor: bg, plot_bgcolor: bg,
+    margin: { l: 50, r: 20, t: 20, b: 50 },
+    legend: { font: { color: textColor, size: 11 }, bgcolor: 'transparent' },
+    hovermode: 'closest',
+    dragmode: 'pan',
+    xaxis: { ...axisStyle, title: xLabel, showgrid: m === 'Custom' },
+    yaxis: { ...axisStyle, title: yLabel, showgrid: m === 'Custom' },
+  };
+
+  if (nDims === 3) {
+    layout.scene = {
+      xaxis: { ...axisStyle, title: xLabel },
+      yaxis: { ...axisStyle, title: yLabel },
+      zaxis: { ...axisStyle, title: zLabel || 'D3' },
+      bgcolor: bg,
+      dragmode: 'orbit',
+    };
+    delete layout.xaxis; delete layout.yaxis;
+    delete layout.dragmode;
+  }
+
+  Plotly.react('plot', traces, layout, {
+    responsive: true,
+    displayModeBar: false,
+    scrollZoom: true,
+    dragmode: nDims === 3 ? 'orbit' : 'pan',
+  });
+
+  // Force default cursor on the plot
+  setTimeout(() => {
+    document.querySelectorAll('#plot .nsewdrag, #plot .drag, #plot svg').forEach(el => {
+      el.style.cursor = 'default';
+    });
+  }, 100);
+
+  // Hover handler for molecule card
+  const plotEl = document.getElementById('plot');
+  plotEl.removeAllListeners?.('plotly_hover');
+  plotEl.on('plotly_hover', e => showMolCard(e));
+  plotEl.on('plotly_unhover', () => hideMolCard());
+}
+
+// ── Molecule card ─────────────────────────────────────────────────────────────
+let molCardTimer = null;
+async function showMolCard(e) {
+  const pt = e.points[0];
+  if (!pt?.customdata) return;
+  const [dataset, name, smi] = pt.customdata;
+  if (!smi || smi === 'nan') return;
+
+  const card = document.getElementById('mol-card');
+  document.getElementById('mol-card-dataset').textContent = dataset;
+  document.getElementById('mol-card-name').textContent = name;
+  document.getElementById('mol-card-img').src = '';
+  card.style.display = 'block';
+
+  // Position near cursor
+  const plotRect = document.getElementById('plot-area').getBoundingClientRect();
+  const ex = e.event.clientX - plotRect.left;
+  const ey = e.event.clientY - plotRect.top;
+  const cw = 236, ch = 260;
+  let cx = ex + 16, cy = ey - ch / 2;
+  if (cx + cw > plotRect.width - 10) cx = ex - cw - 16;
+  cy = Math.max(10, Math.min(cy, plotRect.height - ch - 10));
+  card.style.left = cx + 'px';
+  card.style.top = cy + 'px';
+
+  // Fetch image
+  try {
+    const res = await fetch(`${API}/molecule/image`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ smiles: smi, width: 440, height: 360 }),
+    });
+    const data = await res.json();
+    if (data.image) document.getElementById('mol-card-img').src = data.image;
+  } catch {}
+}
+
+function hideMolCard() {
+  document.getElementById('mol-card').style.display = 'none';
+}
+
+// ── Overlap ───────────────────────────────────────────────────────────────────
+async function computeOverlap() {
+  const visibleSets = Object.entries(datasets).filter(([,d])=>d.visible).map(([n])=>n);
+  if (visibleSets.length < 2) { notify('need at least 2 datasets', true); return; }
+
+  const body = {
+    session_id: sessionId,
+    set_names: visibleSets,
+    descriptor_cols: getSelectedDescs(),
+    method, n_dimensions: nDims,
+  };
+
+  try {
+    const res = await fetch(`${API}/overlap`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail);
+
+    const distBody = document.getElementById('overlap-body');
+    distBody.innerHTML = Object.entries(data.centroid_distances).map(([k,v]) =>
+      `<tr><td>${k}</td><td class="overlap-dist">${v.toFixed(2)}</td></tr>`
+    ).join('');
+
+    const spreadBody = document.getElementById('spread-body');
+    spreadBody.innerHTML = Object.entries(data.spread).map(([k,v]) =>
+      `<tr><td>${k}</td><td class="overlap-dist">${v.toFixed(2)}</td></tr>`
+    ).join('');
+  } catch(e) {
+    notify(e.message, true);
+  }
+}
+
+// ── Point size ────────────────────────────────────────────────────────────────
+function updatePointSize() {
+  if (lastProjection) renderPlot(lastProjection);
+}
+
+// ── UI helpers ────────────────────────────────────────────────────────────────
+function setStatus(msg) { document.getElementById('status-msg').textContent = msg; }
+
+function showProgress(msg, pct) {
+  document.getElementById('progress-msg').textContent = msg;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-overlay').classList.add('visible');
+  // Animate bar
+  setTimeout(() => document.getElementById('progress-bar').style.width = '85%', 300);
+}
+
+function hideProgress() {
+  document.getElementById('progress-bar').style.width = '100%';
+  setTimeout(() => {
+    document.getElementById('progress-overlay').classList.remove('visible');
+    document.getElementById('progress-bar').style.width = '0%';
+  }, 400);
+}
+
+let notifTimer;
+function notify(msg, isError=false) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.className = 'show' + (isError ? ' error' : '');
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(() => el.className = '', 3500);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+init();
+</script>
 </body>
 </html>
